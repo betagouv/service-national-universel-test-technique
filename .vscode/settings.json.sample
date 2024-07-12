@@ -1,0 +1,5 @@
+{
+  "jest.shell": "/bin/zsh",
+  "jest.jestCommandLine": "source ~/.zshrc && cd api && nvm use && npm run test:debug --",
+  "jest.runMode": "on-demand"
+}

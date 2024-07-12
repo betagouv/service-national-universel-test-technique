@@ -1,0 +1,56 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Install and start All applications",
+      "dependsOn": ["Install dependencies", "Start All Applications"],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Install dependencies",
+      "command": "cd api && npm install && cd ../app && npm install",
+      "type": "shell",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "./"
+      }
+    },
+    {
+      "label": "Start All Applications",
+      "dependsOn": ["Start Api", "Start App"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Start App",
+      "command": "npm run dev",
+      "type": "shell",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "./app"
+      }
+    },
+    {
+      "label": "Start Api",
+      "command": "npm run dev",
+      "type": "shell",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "./api"
+      }
+    },
+    {
+      "label": "Run test",
+      "command": "npm test",
+      "type": "shell",
+      "problemMatcher": [],
+      "options": {
+        "cwd": "./api"
+      }
+    }
+  ]
+}
