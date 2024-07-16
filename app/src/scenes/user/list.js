@@ -1,5 +1,6 @@
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import React, { useEffect, useState } from "react";
+import validator from "validator";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
 import Loader from "../../components/loader";
@@ -87,7 +88,7 @@ const NewList = () => {
 
 const Create = () => {
   const [open, setOpen] = useState(false);
-
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const history = useHistory();
 
   return (
@@ -105,7 +106,7 @@ const Create = () => {
               e.stopPropagation();
             }}>
             <Formik
-              initialValues={{}}
+              initialValues={{ name: "", email: "", password: "" }}
               onSubmit={async (values, { setSubmitting }) => {
                 try {
                   values.status = "active";
@@ -119,27 +120,50 @@ const Create = () => {
                 } catch (e) {
                   console.log(e);
                   toast.error("Some Error!", e.code);
+                } finally {
+                  setSubmitting(false);
                 }
-                setSubmitting(false);
               }}>
-              {({ values, handleChange, handleSubmit, isSubmitting }) => (
+              {({ values, handleChange, handleSubmit, isSubmitting, errors }) => (
                 <React.Fragment>
                   <div>
                     <div className="flex justify-between flex-wrap">
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Name</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="name" value={values.username} onChange={handleChange} />
+                        <Field
+                          validate={(v) => validator.isEmpty(v) && "This field is Required"}
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          name="name"
+                          value={values.name}
+                          onChange={handleChange}
+                        />
+                        {isSubmitted && <p className="text-[12px] text-[#FD3131]">{errors.name}</p>}
                       </div>
+
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Email</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="email" value={values.email} onChange={handleChange} />
+                        <Field
+                          validate={(v) => validator.isEmpty(v) && "This field is Required"}
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          name="email"
+                          value={values.email}
+                          onChange={handleChange}
+                        />
+                        {isSubmitted && <p className="text-[12px] text-[#FD3131]">{errors.email}</p>}
                       </div>
                     </div>
                     <div className="flex justify-between flex-wrap mt-3">
                       {/* Password */}
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Password</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="password" value={values.password} onChange={handleChange} />
+                        <Field
+                          validate={(v) => validator.isEmpty(v) && "This field is Required"}
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          name="password"
+                          value={values.password}
+                          onChange={handleChange}
+                        />
+                        {isSubmitted && <p className="text-[12px] text-[#FD3131]">{errors.password}</p>}
                       </div>
                     </div>
                   </div>
@@ -148,7 +172,10 @@ const Create = () => {
                   <LoadingButton
                     className="mt-[1rem]  bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]"
                     loading={isSubmitting}
-                    onClick={handleSubmit}>
+                    onClick={() => {
+                      setIsSubmitted(true);
+                      handleSubmit();
+                    }}>
                     Save
                   </LoadingButton>
                 </React.Fragment>
