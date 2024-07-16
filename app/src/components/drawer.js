@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ActivitiesIcon, HomeIcon, PeopleIcon, ProjectsIcon } from "../assets/Icons";
 
@@ -7,23 +7,26 @@ const Drawer = () => {
 };
 
 const DrawerDesktop = () => {
+  const [isMinimized, setIsMinimized] = useState(false);
   return (
-    <div className="flex-shrink-0 overflow-y-auto">
-      <ul className={`list-none px-3 z-10 border-r border-[#a0a6b124] space-y-2 translate-x-0 duration-200`}>
-        <Section title="Général">
-          <Link to="/" title="Home" Icon={HomeIcon} />
-          <Link to="/project" title="Projects" Icon={ProjectsIcon} />
-          <Link to="/activity" title="Activities" Icon={ActivitiesIcon} />
-          <Link to="/user" title="People" Icon={PeopleIcon} />
-        </Section>
+    <>
+      <div className={`flex-shrink-0 overflow-y-auto`}>
+        <ul className={`list-none px-3 z-10 border-r border-[#a0a6b124] space-y-2 translate-x-0 duration-200`}>
+          <Section setIsMinimized={setIsMinimized} isMinimized={isMinimized} title="Général">
+            <Link to="/" title="Home" Icon={HomeIcon} />
+            <Link to="/project" title="Projects" Icon={ProjectsIcon} />
+            <Link to="/activity" title="Activities" Icon={ActivitiesIcon} />
+            <Link to="/user" title="People" Icon={PeopleIcon} />
+          </Section>
 
-        <div className="h-10" />
-      </ul>
-    </div>
+          <div className="h-10" />
+        </ul>
+      </div>
+    </>
   );
 };
 
-const Link = ({ Icon, title, to, onClick = () => {} }) => {
+const Link = ({ Icon, title, to, onClick = () => { } }) => {
   return (
     <li>
       <NavLink
@@ -40,16 +43,16 @@ const Link = ({ Icon, title, to, onClick = () => {} }) => {
   );
 };
 
-const Section = ({ children, title }) => {
+const Section = ({ children, title, setIsMinimized, isMinimized }) => {
   return (
     <div>
       <h1
         className="flex gap-1 items-center uppercase text-[10px] text-gray-400 tracking-wide font-semibold mt-4 cursor-pointer hover:underline mb-2"
-        onClick={() => setOpen((o) => !o)}>
-        {title}
+        onClick={() => setIsMinimized((m) => !m)}>
+        {isMinimized ? <span>&gt;</span> : title}
       </h1>
 
-      {children}
+      {!isMinimized && children}
     </div>
   );
 };
