@@ -24,6 +24,6 @@ const schema = new Schema({
   status: { type: String },
 });
 
-export type UserType = InferSchemaType<typeof schema> & Document;
+export type ProjectType = InferSchemaType<typeof schema> & Document;
 
 export default mongoose.model(MODELNAME, schema);
