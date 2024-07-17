@@ -88,7 +88,9 @@ const Activities = ({ date, user, project }) => {
 
   async function onSave() {
     for (let i = 0; i < activities.length; i++) {
-      await api.post(`/activity`, activities[i]);
+      const { data } = await api.post(`/activity`, activities[i]);
+      activities[i]._id = data._id;
+      setActivities([...activities]);
       toast.success(`Saved ${activities[i].projectName}`);
     }
   }
@@ -96,8 +98,12 @@ const Activities = ({ date, user, project }) => {
   async function onDelete(i) {
     if (window.confirm("Are you sure ?")) {
       const activity = activities[i];
-      await api.remove(`/activity/${activity._id}`);
-      toast.success(`Deleted ${activity.project}`);
+      if (activity._id) {
+        await api.remove(`/activity/${activity._id}`);
+      }
+      activities.splice(i, 1);
+      setActivities([...activities]);
+      toast.success(`Deleted ${activity.projectName}`);
     }
   }
 
@@ -127,7 +133,6 @@ const Activities = ({ date, user, project }) => {
   const getTotal = () => {
     return (activities.reduce((acc, a) => acc + a.total, 0) / 8).toFixed(2);
   };
-
   return (
     <div className="flex flex-wrap py-3 gap-4 text-black">
       <div className="w-screen md:w-full p-2 md:!px-8">
