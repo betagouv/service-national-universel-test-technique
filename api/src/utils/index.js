@@ -1,14 +1,8 @@
-const passwordValidator = require("password-validator");
+const Joi = require("joi");
 
 function validatePassword(password) {
-  const schema = new passwordValidator();
-  schema
-    .is()
-    .min(6) // Minimum length 6
-    .is()
-    .max(100); // Maximum length 100
-
-  return schema.validate(password);
+  const { error } = Joi.string().required().min(6).max(100).validate(password);
+  return !error;
 }
 
 module.exports = {

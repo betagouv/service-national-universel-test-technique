@@ -2,12 +2,12 @@ const express = require("express");
 const passport = require("passport");
 const router = express.Router();
 
-const UserObject = require("../models/user").default;
+const UserModel = require("../models/user").default;
 const AuthObject = require("../auth");
 
 const { validatePassword } = require("../utils");
 
-const UserAuth = new AuthObject(UserObject);
+const UserAuth = new AuthObject(UserModel);
 
 const SERVER_ERROR = "SERVER_ERROR";
 const USER_ALREADY_REGISTERED = "USER_ALREADY_REGISTERED";
@@ -21,7 +21,7 @@ router.get("/signin_token", passport.authenticate("user", { session: false }), (
 
 router.get("/available", passport.authenticate("user", { session: false }), async (req, res) => {
   try {
-    const users = await UserObject.find({ availability: { $ne: "not available" }, organisation: req.user.organisation }).sort("-last_login_at");
+    const users = await UserModel.find({ availability: { $ne: "not available" }, organisation: req.user.organisation }).sort("-last_login_at");
 
     return res.status(200).send({ ok: true, data: users });
   } catch (error) {
@@ -32,7 +32,7 @@ router.get("/available", passport.authenticate("user", { session: false }), asyn
 
 router.get("/:id", passport.authenticate("user", { session: false }), async (req, res) => {
   try {
-    const data = await UserObject.findOne({ _id: req.params.id });
+    const data = await UserModel.findOne({ _id: req.params.id });
     return res.status(200).send({ ok: true, data });
   } catch (error) {
     console.log(error);
@@ -44,7 +44,7 @@ router.post("/", passport.authenticate("user", { session: false }), async (req, 
   try {
     if (!validatePassword(req.body.password)) return res.status(400).send({ ok: false, user: null, code: PASSWORD_NOT_VALIDATED });
 
-    const user = await UserObject.create({ ...req.body, organisation: req.user.organisation });
+    const user = await UserModel.create({ ...req.body, organisation: req.user.organisation });
 
     return res.status(200).send({ data: user, ok: true });
   } catch (error) {
@@ -56,7 +56,7 @@ router.post("/", passport.authenticate("user", { session: false }), async (req, 
 
 router.get("/", passport.authenticate("user", { session: false }), async (req, res) => {
   try {
-    const users = await UserObject.find({ ...req.query, organisation: req.user.organisation }).sort("-last_login_at");
+    const users = await UserModel.find({ ...req.query, organisation: req.user.organisation }).sort("-last_login_at");
     return res.status(200).send({ ok: true, data: users });
   } catch (error) {
     console.log(error);
@@ -68,7 +68,7 @@ router.put("/:id", passport.authenticate("user", { session: false }), async (req
   try {
     const obj = req.body;
 
-    const user = await UserObject.findByIdAndUpdate(req.params.id, obj, { new: true });
+    const user = await UserModel.findByIdAndUpdate(req.params.id, obj, { new: true });
     res.status(200).send({ ok: true, user });
   } catch (error) {
     console.log(error);
@@ -79,7 +79,7 @@ router.put("/:id", passport.authenticate("user", { session: false }), async (req
 router.put("/", passport.authenticate("user", { session: false }), async (req, res) => {
   try {
     const obj = req.body;
-    const data = await UserObject.findByIdAndUpdate(req.user._id, obj, { new: true });
+    const data = await UserModel.findByIdAndUpdate(req.user._id, obj, { new: true });
     res.status(200).send({ ok: true, data });
   } catch (error) {
     console.log(error);
@@ -89,7 +89,7 @@ router.put("/", passport.authenticate("user", { session: false }), async (req, r
 
 router.delete("/:id", passport.authenticate("user", { session: false }), async (req, res) => {
   try {
-    await UserObject.findOneAndRemove({ _id: req.params.id });
+    await UserModel.findOneAndRemove({ _id: req.params.id });
     res.status(200).send({ ok: true });
   } catch (error) {
     console.log(error);

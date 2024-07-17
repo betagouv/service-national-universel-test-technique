@@ -21,6 +21,13 @@
     "target": "ES2021",
     "skipLibCheck": true,
     "noEmitOnError": true,
-    "noEmit": false
-  }
+    "noEmit": false,
+    "baseUrl": "src",
+    "outDir": "build",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["src", "./globals.d.ts"],
+  "exclude": ["**/dist/**/*", "**/build/**/*", "node_modules", "**/node_modules/*"]
 }

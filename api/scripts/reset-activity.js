@@ -2,7 +2,7 @@
  * Reset activity for organisation
  */
 require("dotenv").config();
-require("../src/mongo");
+const { initDB } = require("../src/mongo");
 
 const ActivityModel = require("../src/models/activity").default;
 
@@ -11,6 +11,7 @@ const organisation = "Test";
 
 (async () => {
   try {
+    await initDB();
     const activities = await ActivityModel.find({ organisation });
     if (!activities || !activities.length) {
       console.log("🚫 Activities not found");

@@ -1,4 +1,4 @@
-export function getDaysInMonth(month, year) {
+export function getDaysInMonth(month: number, year: number) {
   const date = new Date(year, month, 1);
   date.setHours(0, 0, 0, 0);
   const days: Date[] = [];

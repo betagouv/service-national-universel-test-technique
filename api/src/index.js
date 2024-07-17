@@ -7,12 +7,11 @@ const cookieParser = require("cookie-parser");
 require("./mongo");
 
 const { PORT, APP_URL } = require("./config.js");
+const { initDB } = require("./mongo");
 
 const app = express();
 
-const origin = [APP_URL, "https://join.le-stud.com"];
-
-app.use(cors({ credentials: true, origin }));
+app.use(cors({ credentials: true, origin: APP_URL.split(",") }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -23,12 +22,18 @@ app.use("/user", require("./controllers/user"));
 app.use("/project", require("./controllers/project"));
 app.use("/activity", require("./controllers/activity"));
 
-const d = new Date();
-
 app.get("/", async (req, res) => {
-  res.status(200).send("API LOCAL TIME :  " + d.toLocaleString());
+  res.status(200).send({ name: "technical-test-api", localTime: new Date().toISOString() });
 });
 
 require("./passport")(app);
 
-app.listen(PORT, () => console.log("Listening on port " + PORT));
+process.on("unhandledRejection", (error) => {
+  console.error("Unhandled Rejection: ", error?.message);
+  process.exit(1);
+});
+
+(async () => {
+  await initDB();
+  app.listen(PORT, () => console.log("Listening on port " + PORT));
+})();
