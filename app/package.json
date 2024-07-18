@@ -19,7 +19,7 @@
     "express": "^4.19.2",
     "formik": "^2.1.5",
     "hsts": "^2.2.0",
-    "isomorphic-fetch": "^2.2.1",
+    "isomorphic-fetch": "^3.0.0",
     "less": "^3.12.2",
     "less-loader": "^6.2.0",
     "path": "^0.12.7",
